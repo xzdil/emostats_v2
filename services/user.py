@@ -44,7 +44,8 @@ class UserService:
             return None
         if not verify_password(password, user.password):
             return None
-        return UserDB.from_orm(user)
+        logger.info(f"User authenticated successfully: {user.username}")
+        return UserDB.model_validate(user)
     
     def register_user(self, user_create: UserCreate) -> UserDB:
         """Регистрирует нового пользователя: хеширует пароль и сохраняет в БД"""
@@ -52,4 +53,5 @@ class UserService:
         user_data = user_create.model_dump()
         user_data['password'] = password
         user = self.repo.create(**user_data)
+        logger.info(f"User registered successfully: {user.username}")
         return UserDB.model_validate(user)

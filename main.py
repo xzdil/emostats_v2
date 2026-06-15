@@ -1,5 +1,6 @@
 # app.py
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from api.users import register_users_route
 from api.diary import register_diary_route
@@ -9,6 +10,14 @@ from core.database import engine
 BaseORM.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # для разработки, потом сузь
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 register_users_route(app)
 register_diary_route(app)
